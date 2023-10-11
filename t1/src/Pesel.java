@@ -3,8 +3,21 @@ public class Pesel {
     private static int length;
 
 
+    public String getPesel() {
+        return pesel;
+    }
+
+    public void setPesel(String pesel) {
+        this.pesel = pesel;
+    }
+
+    public static int getLength() {
+        return length;
+    }
+
 
     public Pesel(String pesel){
+
         this.pesel = pesel;
     }
 
@@ -19,7 +32,7 @@ public class Pesel {
     }
 
     public static void check(Pesel pesel){
-        length = pesel.length;
+        int length = pesel.length;
         if(length == 9){
             System.out.println("jest git");
         }
