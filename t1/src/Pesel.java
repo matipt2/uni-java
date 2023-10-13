@@ -1,6 +1,14 @@
 public class Pesel {
     private String pesel;
 
+    public String getPesel() {
+        return pesel;
+    }
+
+    public void setPesel(String pesel) {
+        this.pesel = pesel;
+    }
+
     public Pesel(String pesel) {
         this.pesel = pesel;
     }
@@ -24,7 +32,7 @@ public class Pesel {
         }
 
         int kontrolna = 10 - (sum % 10);
-        if (kontrolna == 10) {
+        if (kontrolna == 10) { // w razie przypadku szczegolnego z wikipedii
             kontrolna = 0;
         }
 
