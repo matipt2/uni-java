@@ -1,26 +1,34 @@
 package pl.edu.uj.javaframe;
 
 public class MyImaginaryDouble extends MyDouble{
-    private double realNumber;
-    private double imaginaryNumber;
+    private double realPart;
+    private double imaginaryPart;
 
-    public MyImaginaryDouble(double realNumber, double imaginaryNumber) {
-        this.realNumber = realNumber;
-        this.imaginaryNumber = imaginaryNumber;
+    public MyImaginaryDouble(double realPart, double imaginaryPart) {
+        this.realPart = realPart;
+        this.imaginaryPart = imaginaryPart;
+    }
+
+    public MyImaginaryDouble() {
     }
 
     @Override
-    public Value create(String val) {
-        val.split("i");
-
-        MyDouble v = new MyDouble();
-        v.value = Double.parseDouble(val);
-        return v;
+    public String toString() {
+        return realPart + " + " + imaginaryPart + "i";
     }
 
+    public Value create(String val) {
+        String targetChar = "i";
+        int index = val.indexOf(targetChar);
+        String real = val.substring(0, index);
+        String imaginary = val.substring(index + 1);
+        double realPart = Double.parseDouble(real);
+        double imaginaryPart = Double.parseDouble(imaginary);
+        return new MyImaginaryDouble(realPart, imaginaryPart);
+    }
     @Override
     public Value add(Value v) {
-        MyDouble result  = new MyDouble();
+        MyImaginaryDouble result = new MyImaginaryDouble();
         result.value = (Double)this.value + Double.valueOf(v.value.toString());
 
         return result;
