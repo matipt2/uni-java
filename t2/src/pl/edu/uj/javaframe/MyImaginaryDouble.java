@@ -1,12 +1,16 @@
 package pl.edu.uj.javaframe;
 
-public class MyImaginaryDouble extends MyDouble{
+public class MyImaginaryDouble extends MyDouble {
     private double realPart;
     private double imaginaryPart;
 
     public MyImaginaryDouble(double realPart, double imaginaryPart) {
+        this.value = realPart;
         this.realPart = realPart;
         this.imaginaryPart = imaginaryPart;
+    }
+    public MyImaginaryDouble(double realPart){
+        this.realPart=realPart;
     }
 
     public MyImaginaryDouble() {
@@ -26,14 +30,43 @@ public class MyImaginaryDouble extends MyDouble{
         double imaginaryPart = Double.parseDouble(imaginary);
         return new MyImaginaryDouble(realPart, imaginaryPart);
     }
-    @Override
-    public Value add(Value v) {
-        MyImaginaryDouble result = new MyImaginaryDouble();
-        result.value = (Double)this.value + Double.valueOf(v.value.toString());
 
-        return result;
-
+    public double getRealPart() {
+        return realPart;
     }
 
+    public void setRealPart(double realPart) {
+        this.realPart = realPart;
+    }
 
+    public double getImaginaryPart() {
+        return imaginaryPart;
+    }
+
+    public void setImaginaryPart(double imaginaryPart) {
+        this.imaginaryPart = imaginaryPart;
+    }
+
+    @Override
+    public Value add(Value v) {
+        if (v instanceof MyImaginaryInt) {
+            MyImaginaryInt im1 = (MyImaginaryInt) v;
+            return new MyImaginaryDouble(realPart + im1.getRealPart(), imaginaryPart + im1.getImaginaryPart());
+        }
+        else if (v instanceof Int) {
+            Int int1 = (Int) v;
+            Integer i = (Integer) int1.value;
+            return new MyImaginaryDouble(realPart + i, imaginaryPart);
+
+        } else if (v instanceof MyImaginaryDouble) {
+            MyImaginaryDouble im2 = (MyImaginaryDouble) v;
+            return new MyImaginaryDouble(realPart + im2.realPart, imaginaryPart + im2.imaginaryPart);
+        }else if (v instanceof MyDouble) {
+            MyDouble double1 = (MyDouble) v;
+            Double x = (Double) double1.value;
+            return new MyImaginaryDouble(realPart + x, imaginaryPart);
+        }  else {
+            return this;
+        }
+    }
 }
