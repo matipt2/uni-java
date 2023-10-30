@@ -9,8 +9,8 @@ public class Cryptographer {
         FileWriter myWriter;
 
         try {
-            reader = new BufferedReader(new FileReader(path_to_file_in));
-            myWriter = new FileWriter(path_to_file_out);
+            reader = new BufferedReader(new FileReader(path_to_file_in)); //reader, aby odczytac tekst z pliku
+            myWriter = new FileWriter(path_to_file_out); //FileWriter aby wczytac juz cryptedLine do nowego pliku txt
 
             String line = reader.readLine();
 
