@@ -95,10 +95,12 @@ public class Int extends Value{
 
     @Override
     public boolean equals(Object other){
+        Int v = new Int();
+        v.value = Integer.parseInt(other.toString());
         if(other instanceof Int){
-            return this.value.equals(((Int)other).value);
+            return this.value != null && this.value.equals(((Int)other).value);
         }
-        throw new RuntimeException("invalid typee");
+        throw new RuntimeException("invalid type");
     }
 
 
