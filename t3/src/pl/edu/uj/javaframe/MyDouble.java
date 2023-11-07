@@ -20,7 +20,7 @@ public class MyDouble extends Value {
     public Value sub(Value v) {
         if(v instanceof MyDouble){
             MyDouble result  = new MyDouble();
-            result.value = (Double)this.value - (Double)((MyDouble)v).value;
+            result.value = (Double)this.value - (Double)(v).value;
             return result;
         }
         throw new RuntimeException("invalid typee");
