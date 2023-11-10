@@ -12,80 +12,90 @@ public class MyDouble extends Value {
     public Value add(Value v) {
         MyDouble result  = new MyDouble();
         result.value = (Double)this.value + Double.valueOf(v.value.toString());
-
         return result;
     }
 
     @Override
     public Value sub(Value v) {
-        if(v instanceof MyDouble){
-            MyDouble result  = new MyDouble();
-            result.value = (Double)this.value - (Double)(v).value;
-            return result;
-        }
-        throw new RuntimeException("invalid typee");
+        MyDouble result  = new MyDouble();
+        result.value = (Double)this.value - Double.valueOf(v.value.toString());
+        return result;
     }
 
     @Override
     public Value mul(Value v) {
-        if(v instanceof MyDouble){
-            MyDouble result  = new MyDouble();
-            result.value = (Double)this.value * (Double)((MyDouble)v).value;
-            return result;
-        }
-        throw new RuntimeException("invalid typee");
+        MyDouble result = new MyDouble();
+        result.value = (Double)this.value*Double.valueOf(v.value.toString());
+        return result;
     }
 
     @Override
     public Value div(Value v) {
-        if(v instanceof MyDouble){
-            MyDouble result  = new MyDouble();
-            result.value = ((Double)this.value) / (Double)((MyDouble)v).value;
-            return result;
-        }
-        throw new RuntimeException("invalid typee");
+        MyDouble result = new MyDouble();
+        result.value = (Double)this.value/Double.valueOf(v.value.toString());
+        return result;
     }
 
     @Override
     public Value pow(Value v){
-        if(v instanceof MyDouble){
+        if(v instanceof Int){
             MyDouble result = new MyDouble();
-            result.value = Math.pow((Double)this.value, (Double)((MyDouble)v).value);
+            result.value = Math.pow((Double)this.value, (Integer)v.value);
             return result;
         }
-        throw new RuntimeException("invalid typee");
+        else if(v instanceof MyDouble){
+            MyDouble result = new MyDouble();
+            result.value = Math.pow((Double)this.value,(Double)v.value);
+            return result;
+        }
+        return null;
     }
 
     @Override
     public boolean eq(Value v){
         if(v instanceof MyDouble){
-            return this.value.equals(((MyDouble)v).value);
+            MyDouble result = new MyDouble();
+            return result.value == v.value;
         }
-        throw new RuntimeException("invalid typee");
+        else if(v instanceof Int){
+            Int result = new Int();
+            return result.value == v.value;
+        }
+        return false;
     }
 
     @Override
-    public boolean lte(Value v){
-        if(v instanceof MyDouble){
-            return (Double)this.value <= (Double)((MyDouble)v).value;
+    public boolean lte(Value v) {
+        if (v instanceof MyDouble) {
+            return (double) this.value <= (double) v.value;
+        } else if (v instanceof Int) {
+            return (double)this.value <= (int) v.value;
         }
-        throw new RuntimeException("invalid typee");
+        return false;
     }
 
     @Override
-    public boolean gte(Value v){
-        if(v instanceof MyDouble){
-            return (Double)this.value >= (Double)((MyDouble)v).value;
+    public boolean gte(Value v) {
+        if (v instanceof MyDouble) {
+            return (double) this.value >= (double) v.value;
+        } else if (v instanceof Int) {
+            return (double) this.value >= (int) (v.value);
         }
-        throw new RuntimeException("invalid typee");
+        return false;
     }
 
     @Override
     public boolean neq(Value v){
         if(v instanceof MyDouble){
-            return !this.value.equals(((MyDouble)v).value);
+            MyDouble result = new MyDouble();
+            return this.value != result.value;
         }
-        throw new RuntimeException("invalid typee");
+        else if(v instanceof Int){
+            Int result = new Int();
+
+            return this.value != result.value;
+        }
+        return false;
     }
 
     @Override
@@ -93,7 +103,7 @@ public class MyDouble extends Value {
         if(other instanceof MyDouble){
             return this.value.equals(((MyDouble)other).value);
         }
-        throw new RuntimeException("invalid typee");
+        return false;
     }
 
 
@@ -101,5 +111,6 @@ public class MyDouble extends Value {
     public int hashCode() {
         return this.value.hashCode();
     }
+
 }
 

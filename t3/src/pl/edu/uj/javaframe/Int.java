@@ -28,17 +28,14 @@ public class Int extends Value{
             result.value = (Integer)this.value - (Integer)((Int)v).value;
             return result;
         }
-        throw new RuntimeException("invalid typee");
+        throw new RuntimeException("nie dziala sub");
     }
 
     @Override
     public Value mul(Value v) {
-        if(v instanceof Int){
-            Int result  = new Int();
-            result.value = (Integer)this.value * (Integer)((Int)v).value;
-            return result;
-        }
-        throw new RuntimeException("invalid typee");
+        Int result = new Int();
+        result.value = (Integer)this.value*Integer.valueOf(v.value.toString());
+        return result;
     }
 
     @Override
@@ -58,7 +55,12 @@ public class Int extends Value{
             result.value = Math.pow((Integer)this.value, (Integer)((Int)v).value);
             return result;
         }
-        throw new RuntimeException("invalid typee");
+        else if(v instanceof MyDouble){
+            Int result = new Int();
+            result.value = Math.pow((Integer)this.value,(Double)v.value);
+            return result;
+        }
+        return null;
     }
 
     @Override
@@ -66,23 +68,27 @@ public class Int extends Value{
         if(v instanceof Int){
             return this.value.equals(((Int)v).value);
         }
-        throw new RuntimeException("invalid typee");
+        return false;
     }
 
     @Override
-    public boolean lte(Value v){
-        if(v instanceof MyDouble){
-            return (Integer)this.value <= (Integer)((Int)v).value;
+    public boolean lte(Value v) {
+        if (v instanceof MyDouble) {
+            return (Double)v.value >= (double)this.value;
+        } else if (v instanceof Int) {
+            return (int) this.value <= (int)(v.value);
         }
-        throw new RuntimeException("invalid typee");
+        return false;
     }
 
     @Override
-    public boolean gte(Value v){
-        if(v instanceof MyDouble){
-            return (Integer)this.value >= (Integer)((Int)v).value;
+    public boolean gte(Value v) {
+        if (v instanceof MyDouble) {
+            return (int)v.value <= (double)this.value;
+        } else if (v instanceof Int) {
+            return (int)this.value >= (int)v.value;
         }
-        throw new RuntimeException("invalid typee");
+        return false;
     }
 
     @Override
@@ -90,7 +96,7 @@ public class Int extends Value{
         if(v instanceof Int){
             return !this.value.equals(((Int)v).value);
         }
-        throw new RuntimeException("invalid typee");
+        return false;
     }
 
     @Override
@@ -100,7 +106,7 @@ public class Int extends Value{
         if(other instanceof Int){
             return this.value != null && this.value.equals(((Int)other).value);
         }
-        throw new RuntimeException("invalid type");
+        return false;
     }
 
 
@@ -108,5 +114,7 @@ public class Int extends Value{
     public int hashCode() {
         return this.value.hashCode();
     }
+
+
 }
 
