@@ -1,36 +1,26 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
 public class Cryptographer {
     public static void cryptfile(String path_to_file_in, String path_to_file_out, Algorithm algorithm) {
-        BufferedReader reader;
-        FileWriter myWriter;
-
         try {
-            reader = new BufferedReader(new FileReader(path_to_file_in)); //reader, aby odczytac tekst z pliku
-            myWriter = new FileWriter(path_to_file_out); //FileWriter aby wczytac juz cryptedLine do nowego pliku txt
-
-            String line = reader.readLine();
-
-            while (line != null) {
-                String encryptedLine = algorithm.crypt(line);
-                myWriter.write(encryptedLine + "\n");
-                line = reader.readLine();
-            }
-
-            reader.close();
-            myWriter.close();
+            List<String> lines = Files.readAllLines(Paths.get(path_to_file_in));
+            lines.replaceAll(algorithm::crypt);
+            Files.write(Paths.get(path_to_file_out), lines);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("something went wrong", e);
         }
     }
 
-
-    public static void decryptfile(String path_to_file_in, String path_to_file_out, Algorithm algorithm){
-
+    public static void decryptfile(String path_to_file_in, String path_to_file_out, Algorithm algorithm) {
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(path_to_file_in));
+            lines.replaceAll(algorithm::decrypt);
+            Files.write(Paths.get(path_to_file_out), lines);
+        } catch (IOException e) {
+            throw new RuntimeException("something went wrong", e);
+        }
     }
-
-
 }
