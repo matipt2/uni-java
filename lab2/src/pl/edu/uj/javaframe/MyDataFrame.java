@@ -7,20 +7,22 @@ public class MyDataFrame extends DataFrame {
         super(types, vals);
     }
 
-    public void print() {
 
+    // w pierwszej lini wypisuje naglowek a pozniej wartosci kazdej kolumny rozdzielone tabulatorami
+
+    public void print() {
         for (int i = 0; i < columns.size(); i++) {
-            System.out.print(columns.get(i).name + "\t");
+            System.out.print(columns.get(i).name.toString() + "\t");
         }
         System.out.println();
 
+        // Wypisuje wwartosci kazdej kolumny
         for (int i = 0; i < columns.get(0).values.size(); i++) {
-            for (int j = 0; j < columns.size(); j++) {
-                System.out.print(columns.get(j).values.get(i).toString() + "\t");
+            for (int k = 0; k < columns.size(); k++) {
+                System.out.print(columns.get(k).values.get(i).toString() + "\t");
             }
             System.out.println();
         }
     }
-
 
 }

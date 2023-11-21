@@ -17,6 +17,8 @@ public class Int extends Value{
         }else{
             result.value = (Integer)this.value + Double.valueOf(v.value.toString()).intValue();
         }
+
+
         return result;
     }
 }

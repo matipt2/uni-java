@@ -19,19 +19,26 @@ public class ImaginaryInt extends Int {
 
     @Override
     public String toString() {
-        return realPart + " + " + imaginaryPart + "i";
+        return realPart +  "i"+ imaginaryPart ;
     }
+
 
     public Value create(String val) {
         String targetChar = "i";
         int index = val.indexOf(targetChar);
-        String real = val.substring(0, index);
-        String imaginary = val.substring(index + 1);
-        double realPart = Integer.parseInt(real);
-        double imaginaryPart = Integer.parseInt(imaginary);
-        return new ImaginaryInt((int) realPart, (int) imaginaryPart);
-    }
+        if(index != -1){
+            String real = val.substring(0, index);
+            String imaginary = val.substring(index + 1);
+            int realPart = Integer.parseInt(real);
+            int imaginaryPart = Integer.parseInt(imaginary);
+            return new ImaginaryInt((int) realPart, (int) imaginaryPart);
+        }
+        else{
+            int realPart = Integer.parseInt(val);
+            return new ImaginaryInt(realPart);
+        }
 
+    }
     public int getRealPart() {
         return realPart;
     }

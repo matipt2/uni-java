@@ -1,12 +1,14 @@
 public class ROTXX implements Algorithm{
-    public int rotation;
-    public final String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private int rotation;
+    private final String alphabet;
 
-    public ROTXX(int rotation){
-        this.rotation = rotation;
-    }
+
     public ROTXX(){
-        this.rotation = 11;
+        this("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",11);
+    }
+    public ROTXX(String alphabet, int rotation){
+        this.alphabet = alphabet;
+        this.rotation = rotation;
     }
 
     @Override

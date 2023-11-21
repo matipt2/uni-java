@@ -9,7 +9,7 @@ public class Main {
         Polibiusz polibiusz = new Polibiusz();
 
 
-        if(cryptType.equals("crypt")){
+        if(cryptType=="crypt"){
             if(alg.equals("rot")){
                 Cryptographer.cryptfile(path_in,path_out,rotxx);
             }
@@ -17,13 +17,18 @@ public class Main {
                 Cryptographer.cryptfile(path_in,path_out,polibiusz);
             }
         }
-            else{
-                if(alg.equals("rot")){
-                    Cryptographer.decryptfile(path_in,path_out,rotxx);
-                }
-                else{
-                    Cryptographer.decryptfile(path_in,path_out,polibiusz);
-                }
+        else{
+            if(alg=="rot"){
+                Cryptographer.decryptfile(path_in,path_out,rotxx);
             }
+            else{
+                Cryptographer.decryptfile(path_in,path_out,polibiusz);
+            }
+        }
+
+
     }
 }
+
+
+

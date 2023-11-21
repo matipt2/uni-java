@@ -18,26 +18,23 @@ public class ImaginaryDouble extends MyDouble {
 
     @Override
     public String toString() {
-        return realPart + " + " + imaginaryPart + "i";
+        return realPart +  "i"+ imaginaryPart ;
     }
 
     public Value create(String val) {
-        if(val.contains("i")){
-            String targetChar = "i";
-            int index = val.indexOf(targetChar);
+        int index = val.indexOf("i");
+        if (index != -1) {
             String real = val.substring(0, index);
             String imaginary = val.substring(index + 1);
             double realPart = Double.parseDouble(real);
             double imaginaryPart = Double.parseDouble(imaginary);
             return new ImaginaryDouble(realPart, imaginaryPart);
+        } else {
+            double realPart = Double.parseDouble(val);
+            return new ImaginaryDouble(realPart);
         }
-        else{
-            String real = val.substring(0, val.length());
-            double realPart = Double.parseDouble(real);
-            return new ImaginaryDouble(realPart, imaginaryPart);
-        }
-
     }
+
 
     public double getRealPart() {
         return realPart;

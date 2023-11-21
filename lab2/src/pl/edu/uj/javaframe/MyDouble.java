@@ -16,11 +16,4 @@ public class MyDouble extends Value {
         return result;
 
     }
-
-    @Override
-    public Value sub(Value v){
-        MyDouble result = new MyDouble();
-        result.value = ((Double)this.value)/Double.valueOf(v.value.toString());
-        return result;
-    }
 }
