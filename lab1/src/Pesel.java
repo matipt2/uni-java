@@ -27,12 +27,12 @@ public class Pesel {
         int[] waga = {1, 3, 7, 9, 1, 3, 7, 9, 1, 3};
 
         for (int i = 0; i < 10; i++) {
-            int index = Character.getNumericValue(pesel.charAt(i)); //getNumericValue, zeby zamienic Stringi na cyfry
+            int index = Character.getNumericValue(pesel.charAt(i)); 
             sum += waga[i] * index;
         }
 
         int kontrolna = 10 - (sum % 10);
-        if (kontrolna == 10) { // w razie przypadku szczegolnego z wikipedii
+        if (kontrolna == 10) { 
             kontrolna = 0;
         }
 

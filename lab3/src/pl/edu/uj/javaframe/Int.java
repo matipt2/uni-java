@@ -45,7 +45,7 @@ public class Int extends Value{
             result.value = ((Integer)this.value) / (Integer)((Int)v).value;
             return result;
         }
-        throw new RuntimeException("invalid typee");
+        throw new RuntimeException("invalid type");
     }
 
     @Override
