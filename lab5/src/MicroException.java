@@ -3,10 +3,12 @@ public class MicroException extends Exception{
     private int errorLine;
 
     public MicroException(){
-
+    }
+    public MicroException(String message){
+        this.message = message;
     }
     public MicroException(String message, int errorLine){
-        this.message = message;
+        super(message);
         this.errorLine = errorLine;
     }
     public String getMessage(){
