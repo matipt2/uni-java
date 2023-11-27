@@ -1,65 +1,51 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.*;
+
 public class MicroDVDDelay {
-    public static void delay(String in, String out, int delay, int fps) throws MicroException, IOException {
-        Path inputFilePath = Paths.get(in);
-        Path outputFilePath = Paths.get(out);
+    public static void delay(String input, String output, int delay, int fps) throws MicroException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(input));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(output))) {
 
-        int lineNumber = 0;
-        try (BufferedReader reader = Files.newBufferedReader(inputFilePath, StandardCharsets.UTF_8);
-             BufferedWriter writer = Files.newBufferedWriter(outputFilePath, StandardCharsets.UTF_8)) {
-
-            Pattern pattern = Pattern.compile("\\{(\\d+)}");
             String line;
-            lineNumber = 0;
+            int lineCount = 0;
 
             while ((line = reader.readLine()) != null) {
-                lineNumber++;
+                lineCount++;
 
-                Matcher matcher = pattern.matcher(line);
-                StringBuffer stringBuffer = new StringBuffer();
-
-                while (matcher.find()) {
-                    int currentNumber = Integer.parseInt(matcher.group(1));
-                    currentNumber += (delay * fps) / 1000;
-                    matcher.appendReplacement(stringBuffer, "{" + currentNumber + "}");
+                if (!line.matches("\\{\\d+\\}\\{\\d+\\}.*")) {
+                    throw new FrameException("Invalid frame sequence format", lineCount);
                 }
 
-                matcher.appendTail(stringBuffer);
-                writer.write(stringBuffer.toString());
-                writer.newLine();
+                String[] frames = line.split("[{}]");
+                if (frames.length < 5) {
+                    throw new FramesNumberException("Missing braces in the sequence", lineCount);
+                }
 
-                validateSequence(line, lineNumber);
+                try {
+                    int startFrame = Integer.parseInt(frames[1]);
+                    int endFrame = Integer.parseInt(frames[3]);
+
+                    if (startFrame < 0 || endFrame < 0) {
+                        throw new FrameNegativeException("Negative frame values are not allowed", lineCount);
+                    }
+
+                    if (startFrame > endFrame) {
+                        throw new FrameOrderException("Start frame is greater than end frame", lineCount);
+                    }
+
+                    int resultStartFrame = startFrame + delay * fps / 1000;
+                    int resultEndFrame = endFrame + delay * fps / 1000;
+
+                    String newLine = "{" + resultStartFrame + "}{" + resultEndFrame + "}" + frames[4];
+                    writer.write(newLine);
+                    writer.newLine();
+
+                } catch (NumberFormatException e) {
+                    throw new FrameStringException("Frame values must be numeric", lineCount);
+                }
             }
 
         } catch (IOException e) {
-            throw new IOException("Error reading or writing files", e);
-        }
-    }
-
-    private static void validateSequence(String line, int lineNumber) throws FrameException {
-        Pattern sequencePattern = Pattern.compile("\\{(\\d+)}(\\{(\\d+)})?");
-        Matcher sequenceMatcher = sequencePattern.matcher(line);
-
-        while (sequenceMatcher.find()) {
-            int startFrame = Integer.parseInt(sequenceMatcher.group(1));
-            int endFrame = sequenceMatcher.group(3) != null ? Integer.parseInt(sequenceMatcher.group(3)) : startFrame;
-
-            if (startFrame > endFrame) {
-                throw new FrameOrderException("Start frame is greater than end frame", lineNumber);
-            }
-
-            if (!sequenceMatcher.group(1).matches("\\d+") ||
-                    (sequenceMatcher.group(3) != null && !sequenceMatcher.group(3).matches("\\d+"))) {
-                throw new FrameNumberException("Invalid frame number format", lineNumber);
-            }
+            throw new BufferedStreamException("Error in buffered stream", 7);
         }
     }
 }
