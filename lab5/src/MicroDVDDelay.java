@@ -6,46 +6,53 @@ public class MicroDVDDelay {
              BufferedWriter writer = new BufferedWriter(new FileWriter(output))) {
 
             String line;
-            int lineCount = 0;
+            int counting = 0;
 
             while ((line = reader.readLine()) != null) {
-                lineCount++;
-
-                if (!line.matches("\\{\\d+\\}\\{\\d+\\}.*")) {
-                    throw new FrameException("Invalid frame sequence format", lineCount);
-                }
-
-                String[] frames = line.split("[{}]");
-                if (frames.length < 5) {
-                    throw new FramesNumberException("Missing braces in the sequence", lineCount);
-                }
-
-                try {
-                    int startFrame = Integer.parseInt(frames[1]);
-                    int endFrame = Integer.parseInt(frames[3]);
-
-                    if (startFrame < 0 || endFrame < 0) {
-                        throw new FrameNegativeException("Negative frame values are not allowed", lineCount);
-                    }
-
-                    if (startFrame > endFrame) {
-                        throw new FrameOrderException("Start frame is greater than end frame", lineCount);
-                    }
-
-                    int resultStartFrame = startFrame + delay * fps / 1000;
-                    int resultEndFrame = endFrame + delay * fps / 1000;
-
-                    String newLine = "{" + resultStartFrame + "}{" + resultEndFrame + "}" + frames[4];
-                    writer.write(newLine);
-                    writer.newLine();
-
-                } catch (NumberFormatException e) {
-                    throw new FrameStringException("Frame values must be numeric", lineCount);
-                }
+                counting++;
+                processLine(line, counting, delay, fps, writer);
             }
 
         } catch (IOException e) {
-            throw new BufferedStreamException("Error in buffered stream", 7);
+            throw new BufferException("Error in buffered stream", 7);
+        }
+    }
+
+    private static void processLine(String line, int lineCount, int delay, int fps, BufferedWriter writer) throws MicroException {
+        if (!line.matches("\\{\\d+\\}\\{\\d+\\}.*")) {
+            throw new InvalidFrameException("Invalid frame sequence format", lineCount);
+        }
+
+        String[] frames = line.split("[{}]");
+        if (frames.length < 5) {
+            throw new NumberInFramesException("Missing braces in the sequence", lineCount);
+        }
+
+        try {
+            int start = Integer.parseInt(frames[1]);
+            int end = Integer.parseInt(frames[3]);
+
+            frameValidation(start, end, lineCount);
+
+            int startingResult = start + delay * fps / 1000;
+            int endingResult = end + delay * fps / 1000;
+
+            String newLine = "{" + startingResult + "}{" + endingResult + "}" + frames[4];
+            writer.write(newLine);
+            writer.newLine();
+
+        } catch (NumberFormatException | IOException e) {
+            throw new StringFrameException("Frame values must be numeric", lineCount);
+        }
+    }
+
+    private static void frameValidation(int startFrame, int endFrame, int lineCount) throws MicroException {
+        if (startFrame < 0 || endFrame < 0) {
+            throw new NegativeFrameException("Negative frame values are not allowed", lineCount);
+        }
+
+        if (startFrame > endFrame) {
+            throw new InvalidFrameOrderException("Start frame is greater than end frame", lineCount);
         }
     }
 }
