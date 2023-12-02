@@ -1,24 +1,24 @@
-import java.io.File;
-
 public class Main {
     public static void main(String[] args) {
-        String path_in = args[0];
-        String path_out = args[1];
-        int delay = Integer.parseInt(args[2]);
-        int fps = Integer.parseInt(args[3]);
-
         try {
-            File newFile = new File(path_in);
-            if (newFile.length() == 0) {
-                throw new MicroException("file is empty");
-            } else {
-                MicroDVDDelay.delay(path_in, path_out, delay, fps);
-            }
+            argsValidation(args);
 
+            String inputFilePath = args[0];
+            String outputFilePath = args[1];
+            int delay = Integer.parseInt(args[2]);
+            int fps = Integer.parseInt(args[3]);
+
+            MicroDVDDelay.delay(inputFilePath, outputFilePath, delay, fps);
         } catch (MicroException e) {
-            System.err.println("Error at line " + e.getErrorLine() + ": " + e.getMessage());
+            System.out.println(e.getErrorLine());
         } catch (Exception e) {
-            System.err.println("Unknown error: " + e.getMessage());
+            System.out.println("Unknown exception: " + e.getMessage());
+        }
+    }
+
+    private static void argsValidation(String[] args) throws IllegalArgumentException {
+        if (args.length != 4) {
+            throw new IllegalArgumentException("Invalid arguments");
         }
     }
 }

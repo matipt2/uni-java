@@ -1,54 +1,58 @@
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.*;
 
 public class MicroDVDDelay {
-    public static void delay(String in, String out, int delay, int fps) throws MicroException {
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(in));
-            Pattern pattern = Pattern.compile("\\{(\\d+)}");
+    public static void delay(String input, String output, int delay, int fps) throws MicroException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(input));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(output))) {
 
-            for (int i = 0; i < lines.size() - 1; i++) {
-                String line = lines.get(i);
-                String nextLine = lines.get(i + 1);
-                Matcher matcher = pattern.matcher(line);
-                Matcher nextMatcher = pattern.matcher(nextLine);
-                StringBuffer stringBuffer = new StringBuffer();
+            String line;
+            int counting = 0;
 
-                while (matcher.find() && nextMatcher.find()) {
-                    int currentNumber = Integer.parseInt(matcher.group(1));
-                    int nextNumber = Integer.parseInt(nextMatcher.group(1));
-                    if (currentNumber >= nextNumber) {
-                        throw new MicroException("invalid sequence at line " + (i + 1), i + 1);
-                    }
-                    currentNumber += (delay * fps) / 1000;
-                    matcher.appendReplacement(stringBuffer, "{" + currentNumber + "}");
-                }
-
-                matcher.appendTail(stringBuffer);
-                lines.set(i, stringBuffer.toString());
+            while ((line = reader.readLine()) != null) {
+                counting++;
+                processLine(line, counting, delay, fps, writer);
             }
-
-            String lastLine = lines.get(lines.size() - 1);
-            Matcher lastMatcher = pattern.matcher(lastLine);
-            StringBuffer lastStringBuffer = new StringBuffer();
-
-            while (lastMatcher.find()) {
-                int currentNumber = Integer.parseInt(lastMatcher.group(1));
-                currentNumber += (delay * fps) / 1000;
-                lastMatcher.appendReplacement(lastStringBuffer, "{" + currentNumber + "}");
-            }
-
-            lastMatcher.appendTail(lastStringBuffer);
-            lines.set(lines.size() - 1, lastStringBuffer.toString());
-
-            Files.write(Paths.get(out), lines);
 
         } catch (IOException e) {
-            throw new RuntimeException("Something went wrong", e);
+            throw new BufferException("Error in buffered stream", 7);
+        }
+    }
+
+    private static void processLine(String line, int lineCount, int delay, int fps, BufferedWriter writer) throws MicroException {
+        if (!line.matches("\\{\\d+\\}\\{\\d+\\}.*")) {
+            throw new InvalidFrameException("Invalid frame sequence format", lineCount);
+        }
+
+        String[] frames = line.split("[{}]");
+        if (frames.length < 5) {
+            throw new NumberInFramesException("Missing braces in the sequence", lineCount);
+        }
+
+        try {
+            int start = Integer.parseInt(frames[1]);
+            int end = Integer.parseInt(frames[3]);
+
+            frameValidation(start, end, lineCount);
+
+            int startingResult = start + delay * fps / 1000;
+            int endingResult = end + delay * fps / 1000;
+
+            String newLine = "{" + startingResult + "}{" + endingResult + "}" + frames[4];
+            writer.write(newLine);
+            writer.newLine();
+
+        } catch (NumberFormatException | IOException e) {
+            throw new StringFrameException("Frame values must be numeric", lineCount);
+        }
+    }
+
+    private static void frameValidation(int startFrame, int endFrame, int lineCount) throws MicroException {
+        if (startFrame < 0 || endFrame < 0) {
+            throw new NegativeFrameException("Negative frame values are not allowed", lineCount);
+        }
+
+        if (startFrame > endFrame) {
+            throw new InvalidFrameOrderException("Start frame is greater than end frame", lineCount);
         }
     }
 }
