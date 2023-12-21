@@ -29,20 +29,14 @@ public class EchoClient {
                     + "the connection to: localhost.");
             System.exit(1);
         }
+        out.println(mathematicalOperation);
 
-        BufferedReader stdIn = new BufferedReader(
-                new InputStreamReader(System.in));
-        String userInput;
+        String resultFromServer = in.readLine();
+        System.out.println(resultFromServer);
 
-        System.out.println("Type a message: ");
-        while ((userInput = stdIn.readLine()) != null) {
-            out.println(userInput);
-            System.out.println("echo: " + in.readLine());
-        }
 
         out.close();
         in.close();
-        stdIn.close();
         echoSocket.close();
     }
 }

@@ -2,12 +2,17 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class EchoServer{
 
     public static void main(String[] args) throws IOException{
         ServerSocket serverSocket = null;
         int port = randomPort(1024,65535);
+        System.out.println(port);
+        ExecutorService executorService = Executors.newCachedThreadPool();
+
         try {
             serverSocket = new ServerSocket(port);
             System.out.println("Server listening on port: " + port);
@@ -18,10 +23,17 @@ public class EchoServer{
 
         Socket clientSocket = null;
         try {
-            clientSocket = serverSocket.accept();
+            while(true){
+                clientSocket = serverSocket.accept();
+                executorService.submit(new ConnectionHandler(clientSocket));
+            }
+
         } catch (IOException e) {
             System.out.println("Accept failed: " + port);
             System.exit(-1);
+        }
+        finally {
+            executorService.shutdown();
         }
         PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(
@@ -31,8 +43,14 @@ public class EchoServer{
         String inputLine;
         while ((inputLine = in.readLine()) != null) {
             try {
-                int result = arithmeticExpression(inputLine);
-                out.println(result);
+                if(inputLine.contains("+") || inputLine.contains("-") || inputLine.contains("*") || inputLine.contains("/")){
+                    int result = arithmeticExpression(inputLine);
+                    out.println(result);
+                }else{
+                    String result = inputLine;
+                    out.println(result);
+                }
+
             } catch (Exception e) {
                 out.println("error " + e.getMessage());
             }
@@ -45,7 +63,7 @@ public class EchoServer{
 
 }
 
-    private static int arithmeticExpression(String expression) throws Exception {
+    private static int arithmeticExpression(String expression) throws DivisionByZeroException, Exception {
         List<Integer> numbers = new ArrayList<>();
         List<Character> operators = new ArrayList<>();
 
@@ -76,7 +94,7 @@ public class EchoServer{
                 case '*' -> result *= nextNumber;
                 case '/' -> {
                     if (nextNumber == 0) {
-                        throw new Exception("Division by zero");
+                        throw new DivisionByZeroException("division by zero cannot be allowed!");
                     }
                     result /= nextNumber;
                 }
