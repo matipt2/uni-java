@@ -23,7 +23,7 @@ public class Generics {
         printList(intList);
 
 
-        
+
     }
 
     private static <T> void shout(T thingToShout){
