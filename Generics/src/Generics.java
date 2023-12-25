@@ -20,7 +20,14 @@ public class Generics {
         List<Integer> intList = new ArrayList<>();
         intList.add(3);
         intList.add(15);
+        intList.add(53);
         printList(intList);
+
+        System.out.println("wildcard: ");
+        Wildcard.printList(intList);
+        System.out.println(Wildcard.sumList(intList));
+
+
 
 
 
