@@ -24,8 +24,7 @@ public class Generics {
         printList(intList);
 
         System.out.println("wildcard: ");
-        Wildcard.printList(intList);
-        System.out.println(Wildcard.sumList(intList));
+        System.out.println("expected: 71.0 "+"got: "+Wildcard.sumList(intList)+"!");
 
 
 
