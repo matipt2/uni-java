@@ -11,17 +11,11 @@ public class JButtonExample2 extends JFrame {
         frame.setSize(300,300);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setLayout(new FlowLayout());
+        JButton b1 = new JButton();
+        JButton b2 = new JButton();
 
-
-
-
-
-
-            JButton b1 = new JButton();
-            JButton b2 = new JButton();
-
-            frame.add(b1);
-            frame.add(b2);
+        frame.add(b1);
+        frame.add(b2);
 
             b1.addActionListener(new ActionListener() {
                 @Override
@@ -29,7 +23,6 @@ public class JButtonExample2 extends JFrame {
                     JOptionPane.showMessageDialog(null, "hello from button1!");
                 }
             });
-
             b2.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -38,9 +31,6 @@ public class JButtonExample2 extends JFrame {
             });
         frame.setVisible(true);
         }
-
-
-
     }
 
 
