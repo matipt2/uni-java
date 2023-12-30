@@ -16,5 +16,5 @@ public class ConsumerSupplierExample {
     }
 
     static Function<Integer, Integer> power2 = number -> number*number;
-    
+
 }
