@@ -6,60 +6,49 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConnectionHandler implements Runnable {
+class ConnectionHandler implements Runnable {
     private final Socket clientSocket;
 
     public ConnectionHandler(Socket socket) {
         this.clientSocket = socket;
     }
 
-
     @Override
     public void run() {
-        PrintWriter out = null;
-        try {
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        BufferedReader in = null;
-        try {
-            in = new BufferedReader(
-                    new InputStreamReader(
-                            clientSocket.getInputStream()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        try (PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
 
-        String inputLine;
-        while (true) {
-            try {
-                if (!((inputLine = in.readLine()) != null)) break;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                if(inputLine.contains("+") || inputLine.contains("-") || inputLine.contains("*") || inputLine.contains("/")){
-                    int result = arithmeticExpression(inputLine);
-                    out.println(result);
-                }else{
-                    String result = inputLine;
-                    out.println(result);
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                try {
+                    if (inputLine.matches(".*[+\\-*/].*")) {
+                        int result = arithmeticExpression(inputLine);
+                        out.println(result);
+                    } else {
+                        out.println(inputLine);
+                    }
+
+                } catch (Exception e) {
+                    out.println("error " + e.getMessage());
                 }
-
-            } catch (Exception e) {
-                out.println("error " + e.getMessage());
+            }
+        } catch (IOException e) {
+            System.err.println("Error handling connection: " + e.getMessage());
+        } finally {
+            try {
+                clientSocket.close();
+            } catch (IOException e) {
+                System.err.println("Error closing client socket: " + e.getMessage());
             }
         }
     }
+
     private static int arithmeticExpression(String expression) throws Exception {
         List<Integer> numbers = new ArrayList<>();
         List<Character> operators = new ArrayList<>();
 
         int number = 0;
-        for (int i = 0; i < expression.length(); i++) {
-            char ch = expression.charAt(i);
-
+        for (char ch : expression.toCharArray()) {
             if (Character.isDigit(ch)) {
                 number = (number * 10) + (ch - '0');
             } else if ("+-*/".contains(String.valueOf(ch))) {
@@ -67,7 +56,7 @@ public class ConnectionHandler implements Runnable {
                 number = 0;
                 operators.add(ch);
             } else {
-                throw new Exception("Invalid character: " + ch);
+                throw new IllegalArgumentException("Invalid character: " + ch);
             }
         }
         numbers.add(number);
@@ -83,11 +72,11 @@ public class ConnectionHandler implements Runnable {
                 case '*' -> result *= nextNumber;
                 case '/' -> {
                     if (nextNumber == 0) {
-                        throw new Exception("Division by zero");
+                        throw new ArithmeticException("Division by zero");
                     }
                     result /= nextNumber;
                 }
-                default -> throw new Exception("Invalid operator: " + operator);
+                default -> throw new IllegalArgumentException("Invalid operator: " + operator);
             }
         }
 
