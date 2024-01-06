@@ -18,6 +18,7 @@ public class ReflectField {
             Field field = reflectClass.getDeclaredField("number");
             field.setInt(myClassInstance, 15);
             System.out.println(myClassInstance.getNumber());
+            System.out.println(myClassInstance.getClass());
         }catch(Exception e){
             e.printStackTrace();
         }
