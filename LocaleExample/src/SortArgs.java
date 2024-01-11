@@ -1,5 +1,7 @@
 import java.sql.Array;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Vector;
 
 public class SortArgs{
     public static void main(String[] args) {
@@ -23,7 +25,15 @@ public class SortArgs{
             System.out.println(arr[i]);
         }
 
+        Vector<String> v = new Vector<>();
+        v.add("a");
+        v.add("g");
+        v.add("b");
+        v.add("z");
+        Collections.sort(v);
 
+        for(String number: v){
+            System.out.println(number);
+        }
     }
-
 }
