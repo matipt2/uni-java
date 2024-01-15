@@ -71,8 +71,8 @@ public class WeatherApi extends JFrame{
     }
 
     private static WeatherApi getFetchedWeather() throws IOException {
-        String apiKey = "YOUR_KEY";
-        String city = "Warsaw";
+        String apiKey = "a17574d53ccd93d7464afad74d772378";
+        String city = "Krakow";
         String urlString = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey + "&mode=xml";
 
         URL url = new URL(urlString);
@@ -85,6 +85,7 @@ public class WeatherApi extends JFrame{
             while ((inputLine = in.readLine()) != null) {
                 content.append(inputLine);
             }
+           
             in.close();
             System.out.println("Response content: " + content.toString());
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
