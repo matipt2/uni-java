@@ -29,7 +29,7 @@ public class ComparableExample {
         v.add(new MyString("lotasiet"));
         v.add(new MyString("Xd"));
         v.add(new MyString("dddddddddddd"));
-        
+
         Collections.sort(v);
 
         for (MyString myString : v) {
