@@ -1,9 +1,11 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class f1 {
@@ -51,6 +53,27 @@ public class f1 {
         BiFunction<String,String,String> addStrings = (x,y)->x+y;
         String c = addStrings.apply("jeden","dwa");
         System.out.println(c);
+
+        HashMap<String,Integer> hashMap = new HashMap<>();
+        hashMap.put("b", 5);
+        hashMap.put("a", 3);
+
+        List<String> sortedKeys = hashMap.keySet()
+                .stream()
+                .sorted()
+                .collect(Collectors.toList());
+
+        for(String klucz: sortedKeys){
+            System.out.println(klucz);
+        }
+
+        Function<Integer,Integer> b = x->x+1;
+        System.out.println(b.apply(2));
+        
+
+   
+        
+
         
 
 
