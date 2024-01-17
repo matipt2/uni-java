@@ -1,0 +1,15 @@
+apple.awt.application.name=Main
+file.encoding=UTF-8
+file.separator=/
+ftp.nonProxyHosts=local|*.local|169.254/16|*.169.254/16
+http.nonProxyHosts=local|*.local|169.254/16|*.169.254/16
+java.class.path=/Users/mateuszptasik/Desktop/JavaLAB2023/test/out/production/test
+java.class.version=64.0
+java.home=/opt/homebrew/Cellar/openjdk/20.0.1/libexec/openjdk.jdk/Contents/Home
+java.io.tmpdir=/var/folders/kg/7428dn896gb_0c14rwsdnvgc0000gn/T/
+java.library.path=/Users/mateuszptasik/Library/Java/Extensions\:/Library/Java/Extensions\:/Network/Library/Java/Extensions\:/System/Library/Java/Extensions\:/usr/lib/java\:.
+java.runtime.name=OpenJDK Runtime Environment
+java.runtime.version=20.0.1
+java.specification.name=Java Platform API Specification
+java.specification.vendor=Oracle Corporation
+java.specification.version=20
